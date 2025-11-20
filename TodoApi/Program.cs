@@ -160,8 +160,7 @@ using var scope = app.Services.CreateScope();
 var db = scope.ServiceProvider.GetRequiredService<ToDoDbContext>();
 var users = await db.Users.ToListAsync();
 Console.WriteLine($"Users count: {users.Count}");
-app.UseAuthentication();
-app.UseAuthorization();
-app.MapControllers();
+
+
 app.MapGet("/", () => "Todo API is running...");
 app.Run();
