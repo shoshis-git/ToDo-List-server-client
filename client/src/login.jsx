@@ -1,47 +1,93 @@
 import { useState } from "react";
 import api from "./service";
 import { useNavigate } from "react-router-dom";
+import "./auth.css";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError("");
+    setIsLoading(true);
+
     try {
+      if (!username.trim() || !password.trim()) {
+        setError("Please fill in all fields");
+        setIsLoading(false);
+        return;
+      }
+
       await api.login(username, password);
-      setMessage("Login successful!");
-      navigate("/tasks"); // נווט לרשימת המשימות
+      navigate("/tasks");
     } catch (err) {
-      setMessage(err.response?.data?.message || "Login failed");
+      setError(err.response?.data?.message || "Login failed. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div>
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
-        <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <button type="submit">Login</button>
-        <hr />
-        <button onClick={() => navigate("/register")}>Register</button>
-      </form>
-      {message && <p>{message}</p>}
+    <div className="auth-container">
+      <div className="auth-box">
+        <h1 className="auth-title">Welcome Back</h1>
+        <p className="auth-subtitle">Sign in to your account</p>
+
+        <form onSubmit={handleLogin} className="auth-form">
+          <div className="form-group">
+            <label htmlFor="username" className="form-label">Username</label>
+            <input
+              id="username"
+              type="text"
+              className="form-input"
+              placeholder="Enter your username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              disabled={isLoading}
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="password" className="form-label">Password</label>
+            <input
+              id="password"
+              type="password"
+              className="form-input"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              disabled={isLoading}
+            />
+          </div>
+
+          {error && <div className="error-message">{error}</div>}
+
+          <button
+            type="submit"
+            className="auth-button"
+            disabled={isLoading}
+          >
+            {isLoading ? "Signing in..." : "Sign In"}
+          </button>
+        </form>
+
+        <div className="auth-divider">
+          <span>Don't have an account?</span>
+        </div>
+
+        <button
+          type="button"
+          className="auth-link-button"
+          onClick={() => navigate("/register")}
+          disabled={isLoading}
+        >
+          Create Account
+        </button>
+      </div>
     </div>
   );
 }
