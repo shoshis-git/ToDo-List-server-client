@@ -75,11 +75,11 @@ var app = builder.Build();
 // Middleware
 // ===================
 app.UseCors();
-if (app.Environment.IsDevelopment())
-{
+// if (app.Environment.IsDevelopment())
+// {
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+// }
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -160,4 +160,8 @@ using var scope = app.Services.CreateScope();
 var db = scope.ServiceProvider.GetRequiredService<ToDoDbContext>();
 var users = await db.Users.ToListAsync();
 Console.WriteLine($"Users count: {users.Count}");
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapControllers();
+app.MapGet("/", () => "Todo API is running...");
 app.Run();
