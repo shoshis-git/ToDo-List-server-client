@@ -21,7 +21,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ToDoDbContext>(options =>
     options.UseMySql(
-        builder.Configuration.GetConnectionString("ToDoDB"),
+        builder.Configuration.GetConnectionString("ToDoListDB"),
         new MySqlServerVersion(new Version(8, 0, 44))
     )
 );
