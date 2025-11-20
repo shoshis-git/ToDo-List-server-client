@@ -32,7 +32,7 @@ public partial class ToDoDbContext : DbContext
   
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseMySql("server=buad2gts4ektijtz1esb-mysql.services.clever-cloud.com;user=uhtz9exrwrknzqfg;password=rIY2sSzDYhvT60JdUtjQ;database=buad2gts4ektijtz1esb", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.44-mysql"));
+        => optionsBuilder.UseMySql("server=localhost;user=root;password=sf0556735750!;database=tododb", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.44-mysql"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
