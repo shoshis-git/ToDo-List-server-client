@@ -19,12 +19,24 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 
+// builder.Services.AddDbContext<ToDoDbContext>(options =>
+//     options.UseMySql(
+//         builder.Configuration.GetConnectionString("ToDoListDB"),
+//         new MySqlServerVersion(new Version(8, 0, 44))
+//     )
+// );
+var connectionString =
+    builder.Configuration.GetConnectionString("ToDoListDB") ??
+    Environment.GetEnvironmentVariable("ConnectionStrings__ToDoListDB");
+
 builder.Services.AddDbContext<ToDoDbContext>(options =>
     options.UseMySql(
-        builder.Configuration.GetConnectionString("ToDoListDB"),
-        new MySqlServerVersion(new Version(8, 0, 44))
+        connectionString,
+        new MySqlServerVersion(new Version(8, 0, 44)),
+        mySqlOptions => mySqlOptions.EnableRetryOnFailure()
     )
 );
+
 
 
 // ===================

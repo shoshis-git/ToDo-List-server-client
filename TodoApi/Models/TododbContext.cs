@@ -28,12 +28,6 @@ public partial class ToDoDbContext : DbContext
     {
     }
 
-    
-  
-
-    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    //     => optionsBuilder.UseMySql("server=localhost;user=root;password=sf0556735750!;database=tododb", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.44-mysql"));
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
