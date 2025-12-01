@@ -1,17 +1,26 @@
+import express from 'express';
+import axios from 'axios';
 import dotenv from 'dotenv';
+
 dotenv.config();
 
-import axios from 'axios';
+const app = express();
+const PORT = process.env.PORT || 3000; // Render מספק PORT אוטומטית
 
-const apiKey = process.env.YOUR_RENDER_API_KEY; // שם המשתנה כפי שהגדרת ב-.env
-
-axios.get('https://api.render.com/v1/services', {
-  headers: {
-    Authorization: `Bearer ${apiKey}`,
-    'Accept': 'application/json',
+app.get('/', async (req, res) => {
+  try {
+    const response = await axios.get('https://api.render.com/v1/services', {
+      headers: {
+        Authorization: `Bearer ${process.env.RENDER_API_KEY}`
+      }
+    });
+    res.json(response.data);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error fetching services');
   }
-}).then(res => {
-  console.log(res.data);
-}).catch(err => {
-  console.error(err);
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
