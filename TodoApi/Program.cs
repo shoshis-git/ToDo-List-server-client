@@ -66,24 +66,19 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
+// ===================
+// Middleware
+// ===================
 app.UseSwagger();
 app.UseSwaggerUI();
 
-// ===========================
-// MUST COME BEFORE ANYTHING!
-// Handles Preflight correctly
-// ===========================
-// app.MapMethods("{*path}", new[] { "OPTIONS" }, () => Results.Ok())
-//    .AllowAnonymous();
-
-// ===================
-// Middleware order
-// ===================
 app.UseRouting();
-app.UseCors("AllowClient");   
+
+app.UseCors("AllowClient");
+
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapControllers();
+
 // ===================
 // Auth Endpoints
 // ===================
@@ -121,11 +116,10 @@ app.MapPost("/login", async (ToDoDbContext db, User login) =>
 });
 
 // ===================
-// Items (Protected)
+// Items Endpoints (Protected)
 // ===================
-app.MapGet("/items", async (ToDoDbContext db) =>
-    await db.Items.ToListAsync()
-).RequireAuthorization();
+app.MapGet("/items", async (ToDoDbContext db) => await db.Items.ToListAsync())
+   .RequireAuthorization();
 
 app.MapPost("/items", async (ToDoDbContext db, Item item) =>
 {
