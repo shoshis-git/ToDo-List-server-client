@@ -1,20 +1,17 @@
 import axios from "axios";
 
-// הגדרת כתובת בסיס ל-API
 const apiClient = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || "http://localhost:4000",
+  baseURL: process.env.REACT_APP_API_URL || "https://todo-list-server-client.onrender.com",
 });
 
-// Interceptor ל-request: מוסיף את ה-Authorization header אוטומטית
+// ---- REQUEST ----
 apiClient.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
+  if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
 
-// Interceptor ל-response: תופס שגיאות 401
+// ---- RESPONSE ----
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -26,6 +23,7 @@ apiClient.interceptors.response.use(
   }
 );
 
+// ---- API FUNCTIONS ----
 export default {
   register: (username, password) =>
     apiClient.post("/register", { username, password }).then(res => res.data),
@@ -36,9 +34,7 @@ export default {
       return res.data;
     }),
 
-  logout: () => {
-    localStorage.removeItem("token");
-  },
+  logout: () => localStorage.removeItem("token"),
 
   getTasks: () => apiClient.get("/items").then(res => res.data),
 
