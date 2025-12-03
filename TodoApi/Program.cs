@@ -5,13 +5,13 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // ===================
 // DB Context
 // ===================
-
 builder.Services.AddDbContext<ToDoDbContext>(options =>
     options.UseMySql(
         builder.Configuration.GetConnectionString("tododb"),
@@ -37,10 +37,35 @@ builder.Services.AddCors(options =>
 });
 
 // ===================
-// Swagger
+// Swagger עם JWT
 // ===================
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+        Description = "Enter JWT token"
+    });
+    c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+    {
+        {
+            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            {
+                Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                {
+                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+});
 
 // ===================
 // JWT Authentication
@@ -78,16 +103,19 @@ app.UseSwaggerUI();
 app.UseRouting();
 
 app.UseCors("AllowClient");
-app.MapControllers();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 // ===================
-// Auth Endpoints
+// Auth Endpoints עם PasswordHasher
 // ===================
+var passwordHasher = new PasswordHasher<User>();
+
 app.MapPost("/register", async (ToDoDbContext db, User user) =>
 {
+    // Hash הסיסמה לפני שמירתה
+    user.Password = passwordHasher.HashPassword(user, user.Password);
     db.Users.Add(user);
     await db.SaveChangesAsync();
     return Results.Ok(new { user.Id, user.Username });
@@ -95,11 +123,12 @@ app.MapPost("/register", async (ToDoDbContext db, User user) =>
 
 app.MapPost("/login", async (ToDoDbContext db, User login) =>
 {
-    var user = await db.Users.FirstOrDefaultAsync(
-        u => u.Username == login.Username && u.Password == login.Password
-    );
-
+    var user = await db.Users.FirstOrDefaultAsync(u => u.Username == login.Username);
     if (user == null)
+        return Results.Unauthorized();
+
+    var verificationResult = passwordHasher.VerifyHashedPassword(user, user.Password, login.Password);
+    if (verificationResult == PasswordVerificationResult.Failed)
         return Results.Unauthorized();
 
     var tokenHandler = new JwtSecurityTokenHandler();
