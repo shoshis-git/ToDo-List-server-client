@@ -78,6 +78,7 @@ app.UseSwaggerUI();
 app.UseRouting();
 
 app.UseCors("AllowClient");
+app.MapControllers();
 
 app.UseAuthentication();
 app.UseAuthorization();

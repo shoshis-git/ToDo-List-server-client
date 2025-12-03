@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Pomelo.EntityFrameworkCore.MySql.Scaffolding.Internal;
 
 namespace TodoApi.Models;
+
 public class User
 {
     public int Id { get; set; }
@@ -17,7 +18,7 @@ public class User
 
 public partial class ToDoDbContext : DbContext
 {
-     public DbSet<Item> Items { get; set; }
+    public DbSet<Item> Items { get; set; }
     public DbSet<User> Users { get; set; }
     public ToDoDbContext()
     {
@@ -42,6 +43,12 @@ public partial class ToDoDbContext : DbContext
 
             entity.Property(e => e.Name).HasMaxLength(100);
         });
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.ToTable("Users");
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+        });
+
 
         OnModelCreatingPartial(modelBuilder);
     }
