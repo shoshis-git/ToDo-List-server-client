@@ -27,7 +27,7 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins(
             "http://localhost:3000",
-            "https://todo-list-client.onrender.com"
+            "https://to-do-list-client-6e7i.onrender.com"
         )
         .AllowAnyHeader()
         .AllowAnyMethod()
