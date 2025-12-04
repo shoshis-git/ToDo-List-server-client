@@ -9,7 +9,8 @@ export default function Tasks() {
   const fetchTasks = async () => {
     try {
       const response = await api.getTasks();
-      setTasks(response.data||[]);
+      console.log(response);
+      setTasks(response||[]);
     } catch (error) {
       console.log("Error fetching tasks:", error);
     }
