@@ -9,7 +9,7 @@ export default function Tasks() {
   const fetchTasks = async () => {
     try {
       const response = await api.getTasks();
-      setTasks(response.data);
+      setTasks(response.data||[]);
     } catch (error) {
       console.error("Error fetching tasks:", error);
     }
@@ -66,7 +66,7 @@ export default function Tasks() {
         <button type="submit">Add Task</button>
       </form>
       <ul>
-        {tasks.map(task => (
+        {Array.tasks.map(task => (
           <li key={task.id}>
             <input 
               type="checkbox" 
