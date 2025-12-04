@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const apiClient = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || "https://todo-list-server-client.onrender.com",
+  baseURL: process.env.REACT_APP_API_URL || "http://localhost:5126",
 });
 
 // ---- REQUEST ----
