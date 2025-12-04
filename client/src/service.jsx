@@ -35,24 +35,38 @@ export default {
     }),
 
   logout: () => localStorage.removeItem("token"),
+
   getTasks: async () => {
     const res = await axios.get(API_URL);
     return res.data;
   },
 
-  addTask: async (name) => {
-    const res = await axios.post(API_URL, { name, isComplete: false });
+  addTask: async (taskName) => {
+    // שולח אובייקט עם השדות לפי המסד
+    const res = await axios.post(API_URL, { Username: taskName, IsComplete: false });
     return res.data;
   },
 
-  setCompleted: async (id, isComplete, name) => {
-    const res = await axios.put(`${API_URL}/${id}`, { name, isComplete });
+  setCompleted : async (id, isComplete, username) => {
+    const res = await axios.put(`${API_URL}/${id}`, {
+      Username: username,
+      IsComplete: isComplete,
+    });
     return res.data;
   },
 
-  deleteTask: async (id) => {
-    await axios.delete(`${API_URL}/${id}`);
+  deleteTask : async (id) => {
+    const res = await axios.delete(`${API_URL}/${id}`);
+    return res.data;
   },
+
+// export default {
+//   getTasks,
+//   addTask,
+//   setCompleted,
+//   deleteTask,
+// };
+
   
 };
 

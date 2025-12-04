@@ -20,13 +20,15 @@ export default function Tasks() {
   const handleAddTask = async (e) => {
     e.preventDefault();
     if (!newTask.trim()) return;
-    await api.addTask(newTask);
+
+    // שולח את השדה Username במקום name
+    await api.addTask({ Username: newTask, IsComplete: false });
     setNewTask("");
     fetchTasks();
   };
 
   const handleToggle = async (task) => {
-    await api.setCompleted(task.id, !task.isComplete, task.name);
+    await api.setCompleted(task.id, !task.IsComplete, task.Username);
     fetchTasks();
   };
 
@@ -36,17 +38,17 @@ export default function Tasks() {
   };
 
   const handleToggleAll = async () => {
-    const allCompleted = tasks.every(t => t.isComplete);
+    const allCompleted = tasks.every(t => t.IsComplete);
     for (const task of tasks) {
-      if (task.isComplete === allCompleted) {
-        await api.setCompleted(task.id, !allCompleted, task.name);
+      if (task.IsComplete === allCompleted) {
+        await api.setCompleted(task.id, !allCompleted, task.Username);
       }
     }
     fetchTasks();
   };
 
   const handleClearCompleted = async () => {
-    const completedTasks = tasks.filter(t => t.isComplete);
+    const completedTasks = tasks.filter(t => t.IsComplete);
     for (const task of completedTasks) {
       await api.deleteTask(task.id);
     }
@@ -55,7 +57,7 @@ export default function Tasks() {
 
   const handleEditStart = (task) => {
     setEditingId(task.id);
-    setEditText(task.name);
+    setEditText(task.Username);
   };
 
   const handleEditSave = async (task) => {
@@ -63,7 +65,7 @@ export default function Tasks() {
       handleDelete(task);
       return;
     }
-    await api.setCompleted(task.id, task.isComplete, editText);
+    await api.setCompleted(task.id, task.IsComplete, editText);
     setEditingId(null);
     setEditText("");
     fetchTasks();
@@ -75,27 +77,22 @@ export default function Tasks() {
   };
 
   const handleEditKeyDown = (e, task) => {
-    if (e.key === "Enter") {
-      handleEditSave(task);
-    } else if (e.key === "Escape") {
-      handleEditCancel();
-    }
+    if (e.key === "Enter") handleEditSave(task);
+    else if (e.key === "Escape") handleEditCancel();
   };
 
-  // Filter tasks based on current filter
   const filteredTasks = tasks.filter(task => {
-    if (filter === "active") return !task.isComplete;
-    if (filter === "completed") return task.isComplete;
+    if (filter === "active") return !task.IsComplete;
+    if (filter === "completed") return task.IsComplete;
     return true;
   });
 
-  const activeCount = tasks.filter(t => !t.isComplete).length;
-  const completedCount = tasks.filter(t => t.isComplete).length;
+  const activeCount = tasks.filter(t => !t.IsComplete).length;
+  const completedCount = tasks.filter(t => t.IsComplete).length;
 
   return (
     <section className="todoapp">
       <h1>todos</h1>
-      
       <header>
         <form onSubmit={handleAddTask}>
           <input
@@ -114,7 +111,7 @@ export default function Tasks() {
             className="toggle-all"
             id="toggle-all"
             type="checkbox"
-            checked={tasks.length > 0 && tasks.every(t => t.isComplete)}
+            checked={tasks.every(t => t.IsComplete)}
             onChange={handleToggleAll}
           />
           <label htmlFor="toggle-all">Mark all as complete</label>
@@ -123,22 +120,19 @@ export default function Tasks() {
             {filteredTasks.map((task) => (
               <li
                 key={task.id}
-                className={`${task.isComplete ? "completed" : ""} ${editingId === task.id ? "editing" : ""}`}
+                className={`${task.IsComplete ? "completed" : ""} ${editingId === task.id ? "editing" : ""}`}
               >
                 <div className="view">
                   <input
                     className="toggle"
                     type="checkbox"
-                    checked={task.isComplete}
+                    checked={task.IsComplete}
                     onChange={() => handleToggle(task)}
                   />
                   <label onDoubleClick={() => handleEditStart(task)}>
-                    {task.name}
+                    {task.Username}
                   </label>
-                  <button
-                    className="destroy"
-                    onClick={() => handleDelete(task)}
-                  ></button>
+                  <button className="destroy" onClick={() => handleDelete(task)}></button>
                 </div>
                 {editingId === task.id && (
                   <input
@@ -166,56 +160,23 @@ export default function Tasks() {
 
           <ul className="filters">
             <li>
-              <a
-                href="#/"
-                className={filter === "all" ? "selected" : ""}
-                onClick={(e) => {
-                  e.preventDefault();
-                  setFilter("all");
-                }}
-              >
-                All
-              </a>
+              <a href="#/" className={filter === "all" ? "selected" : ""} onClick={(e) => { e.preventDefault(); setFilter("all"); }}>All</a>
             </li>
             <li>
-              <a
-                href="#/active"
-                className={filter === "active" ? "selected" : ""}
-                onClick={(e) => {
-                  e.preventDefault();
-                  setFilter("active");
-                }}
-              >
-                Active
-              </a>
+              <a href="#/active" className={filter === "active" ? "selected" : ""} onClick={(e) => { e.preventDefault(); setFilter("active"); }}>Active</a>
             </li>
             <li>
-              <a
-                href="#/completed"
-                className={filter === "completed" ? "selected" : ""}
-                onClick={(e) => {
-                  e.preventDefault();
-                  setFilter("completed");
-                }}
-              >
-                Completed
-              </a>
+              <a href="#/completed" className={filter === "completed" ? "selected" : ""} onClick={(e) => { e.preventDefault(); setFilter("completed"); }}>Completed</a>
             </li>
           </ul>
 
-          {completedCount > 0 && (
-            <button className="clear-completed" onClick={handleClearCompleted}>
-              Clear completed
-            </button>
-          )}
+          {completedCount > 0 && <button className="clear-completed" onClick={handleClearCompleted}>Clear completed</button>}
         </footer>
       )}
 
       <footer className="info">
         <p>Double-click to edit a todo</p>
-        <p>
-          Created by <a href="https://github.com">Your Name</a>
-        </p>
+        <p>Created by <a href="https://github.com">Your Name</a></p>
       </footer>
     </section>
   );
