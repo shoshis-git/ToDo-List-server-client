@@ -22,7 +22,7 @@ apiClient.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
+const API_URL = "https://todo-list-server-client.onrender.com/items";
 // ---- API FUNCTIONS ----
 export default {
   register: (username, password) =>
@@ -35,15 +35,30 @@ export default {
     }),
 
   logout: () => localStorage.removeItem("token"),
+  getTasks: async () => {
+    const res = await axios.get(API_URL);
+    return res.data;
+  },
 
-  getTasks: () => apiClient.get("/items").then(res => res.data),
+  addTask: async (name) => {
+    const res = await axios.post(API_URL, { name, isComplete: false });
+    return res.data;
+  },
 
-  addTask: (name) =>
-    apiClient.post("/items", { name, isComplete: false }).then(res => res.data),
+  setCompleted: async (id, isComplete, name) => {
+    const res = await axios.put(`${API_URL}/${id}`, { name, isComplete });
+    return res.data;
+  },
 
-  setCompleted: (id, isComplete, name) =>
-    apiClient.put(`/items/${id}`, { id, name, isComplete }).then(res => res.data),
-
-  deleteTask: (id) =>
-    apiClient.delete(`/items/${id}`).then(res => res.data),
+  deleteTask: async (id) => {
+    await axios.delete(`${API_URL}/${id}`);
+  },
+  
 };
+
+
+
+
+
+
+
