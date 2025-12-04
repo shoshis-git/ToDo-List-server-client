@@ -1,64 +1,24 @@
-import axios from "axios";
-
+import axios from 'axios';
+import './auth.css';
+// הגדרת axios עם כתובת הבסיס של ה-API
 const apiClient = axios.create({
-  baseURL: process.env.REACT_APP_API_URL,
+  baseURL: process.env.REACT_APP_API_BASE_URL, // אם השרת שלך ברץ ב-5000, אחרת עדכן לפי הצורך
 });
 
-// ---- REQUEST ----
-apiClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
-  if (token) config.headers.Authorization = `Bearer ${token}`;
-  return config;
-});
+// פונקציות לתקשורת עם ה-API
 
-// ---- RESPONSE ----
-apiClient.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response && error.response.status === 401) {
-      localStorage.removeItem("token");
-      window.location.href = "/login";
-    }
-    return Promise.reject(error);
-  }
-);
-
-const API_URL = `${process.env.REACT_APP_API_URL}/items`;
-
-// ---- API FUNCTIONS ----
 export default {
-  register: (username, password) =>
-    apiClient.post("/register", { username, password }).then(res => res.data),
+  
 
-  login: (username, password) =>
-    apiClient.post("/login", { username, password }).then(res => {
-      localStorage.setItem("token", res.data.token);
-      return res.data;
-    }),
+  // שליחה של משימה חדשה
+  addTask: (taskName) => apiClient.post('/items', { Name: taskName, IsComplete: false }),
 
-  logout: () => localStorage.removeItem("token"),
+  // קבלת כל המשימות
+  getTasks: () => apiClient.get('/items'),
 
-  getTasks: async () => {
-    const res = await axios.get(API_URL);
-    return res.data;
-  },
+  // עדכון סטטוס של משימה
+  updateTask: (id, name, isComplete) => apiClient.put(`/items/${id}`, { Name: name, IsComplete: isComplete }),
 
-  addTask: async (taskName) => {
-    // שולח אובייקט עם השדות לפי המסד
-    const res = await axios.post(API_URL, { Name: taskName, IsComplete: false });
-    return res.data;
-  },
-
-  setCompleted: async (id, isComplete, name) => {
-    const res = await axios.put(`${API_URL}/${id}`, {
-      Name: name,
-      IsComplete: isComplete,
-    });
-    return res.data;
-  },
-
-  deleteTask: async (id) => {
-    const res = await axios.delete(`${API_URL}/${id}`);
-    return res.data;
-  },
+  // מחיקת משימה
+  deleteTask: (id) => apiClient.delete(`/items/${id}`),
 };

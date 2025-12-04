@@ -1,93 +1,45 @@
-import { useState } from "react";
-import api from "./service";
-import { useNavigate } from "react-router-dom";
-import "./auth.css";
-
-export default function Login() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
+import { useState } from 'react';
+import authService from './authService'; // הפונקציות של התחברות ורישום
+import './auth.css';
+export default function Login({ onLogin }) {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError("");
-    setIsLoading(true);
-
     try {
-      if (!username.trim() || !password.trim()) {
-        setError("Please fill in all fields");
-        setIsLoading(false);
-        return;
-      }
-
-      await api.login(username, password);
-      navigate("/tasks");
-    } catch (err) {
-      setError(err.response?.data?.message || "Login failed. Please try again.");
-    } finally {
-      setIsLoading(false);
+      const data = await authService.login(username, password);
+      localStorage.setItem('token', data.token); // שומרים את ה-token אם הוא נשלח
+      onLogin(); // פונקציה שנשלחת מאת האפליקציה הראשית (למשל לעדכן את מצב ההתחברות)
+    } catch (error) {
+      setErrorMessage('Invalid username or password'); // אם יש שגיאה
     }
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-box">
-        <h1 className="auth-title">Welcome Back</h1>
-        <p className="auth-subtitle">Sign in to your account</p>
-
-        <form onSubmit={handleLogin} className="auth-form">
-          <div className="form-group">
-            <label htmlFor="username" className="form-label">Username</label>
-            <input
-              id="username"
-              type="text"
-              className="form-input"
-              placeholder="Enter your username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              disabled={isLoading}
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="password" className="form-label">Password</label>
-            <input
-              id="password"
-              type="password"
-              className="form-input"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              disabled={isLoading}
-            />
-          </div>
-
-          {error && <div className="error-message">{error}</div>}
-
-          <button
-            type="submit"
-            className="auth-button"
-            disabled={isLoading}
-          >
-            {isLoading ? "Signing in..." : "Sign In"}
-          </button>
-        </form>
-
-        <div className="auth-divider">
-          <span>Don't have an account?</span>
+    <div>
+      <h2>Login</h2>
+      <form onSubmit={handleLogin}>
+        <div>
+          <input 
+            type="text" 
+            placeholder="Username" 
+            value={username} 
+            onChange={(e) => setUsername(e.target.value)} 
+          />
         </div>
-
-        <button
-          type="button"
-          className="auth-link-button"
-          onClick={() => navigate("/register")}
-          disabled={isLoading}
-        >
-          Create Account
-        </button>
-      </div>
+        <div>
+          <input 
+            type="password" 
+            placeholder="Password" 
+            value={password} 
+            onChange={(e) => setPassword(e.target.value)} 
+          />
+        </div>
+        {errorMessage && <div>{errorMessage}</div>}
+        <button type="submit">Login</button>
+      </form>
     </div>
   );
 }
