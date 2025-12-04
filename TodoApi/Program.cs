@@ -14,7 +14,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowClient", policy =>
     {
-        policy.WithOrigins("https://to-do-list-client-6e7i.onrender.com")
+        policy.WithOrigins("https://to-do-list-client-6e7i.onrender.com", "http://localhost:3000")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
@@ -47,6 +47,6 @@ app.MapControllers();
 
 // Configure Port for Cloud Deployment
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
-app.Urls.Add($"http://0.0.0.0:{port}");
+app.Urls.Add($"https://0.0.0.0:{port}");
 
 app.Run();
