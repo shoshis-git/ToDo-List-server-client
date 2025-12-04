@@ -11,22 +11,14 @@ export default {
   
 
   // שליחה של משימה חדשה
-  addTask:async (taskName) => apiClient.post('/items', { Name: taskName, IsComplete: false }),
+  addTask: async(taskName) => apiClient.post('/items', { Name: taskName, IsComplete: false }),
 
   // קבלת כל המשימות
- fetchTasks:async () => {
-  try {
-    const response = await apiClient.get('/items');
-    console.log(response);  // הדפסת התשובה כדי לבדוק את המבנה שלה
-    setTasks(response.data || []); // מוודא שהתשובה היא מערך
-  } catch (error) {
-    console.error("Error fetching tasks:", error);
-  }
-},
+  getTasks:async () => apiClient.get('/items'),
 
   // עדכון סטטוס של משימה
   updateTask: async(id, name, isComplete) => apiClient.put(`/items/${id}`, { Name: name, IsComplete: isComplete }),
 
   // מחיקת משימה
-  deleteTask: async(id) => apiClient.delete(`/items/${id}`),
+  deleteTask:async (id) => apiClient.delete(`/items/${id}`),
 };
