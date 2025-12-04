@@ -14,41 +14,43 @@ public class User
     public string Password { get; set; } = null!;
 }
 
-
-
-
-
-
-
 public partial class ToDoDbContext : DbContext
 {
-    public ToDoDbContext() { }
+        public ToDoDbContext() { }
 
-    public ToDoDbContext(DbContextOptions<ToDoDbContext> options)
-        : base(options)
-    {
-    }
+        public ToDoDbContext(DbContextOptions<ToDoDbContext> options)
+            : base(options) { }
 
-    public DbSet<Item> Items { get; set; } = null!;
-    public DbSet<User> Users { get; set; } = null!;
+        public DbSet<User> Users { get; set; } = null!;
+        public DbSet<Item> Items { get; set; } = null!;
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<Item>(entity =>
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            entity.HasKey(e => e.Id);
-            entity.ToTable("items");
-            entity.Property(e => e.Name).HasMaxLength(100);
-        });
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.ToTable("users");
+                entity.Property(e => e.Username)
+                      .IsRequired()
+                      .HasMaxLength(100);
+                entity.Property(e => e.Password)
+                      .IsRequired()
+                      .HasMaxLength(255); // מספיק לכל hash של סיסמה
+            });
 
-        modelBuilder.Entity<User>(entity =>
-        {
-            entity.HasKey(e => e.Id);
-            entity.ToTable("users");
-        });
+            modelBuilder.Entity<Item>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.ToTable("items");
+                entity.Property(e => e.Name)
+                      .IsRequired()
+                      .HasMaxLength(100);
+                entity.Property(e => e.IsComplete)
+                      .IsRequired();
+            });
 
-        OnModelCreatingPartial(modelBuilder);
-    }
+            OnModelCreatingPartial(modelBuilder);
+        }
 
-    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }
