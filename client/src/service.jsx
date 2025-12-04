@@ -23,7 +23,7 @@ apiClient.interceptors.response.use(
   }
 );
 
-const API_URL = `${process.env.REACT_APP_API_URL}/tasks`;
+const API_URL = `${process.env.REACT_APP_API_URL}/items`;
 
 // ---- API FUNCTIONS ----
 export default {
