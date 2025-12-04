@@ -2,30 +2,36 @@ using Microsoft.AspNetCore.Mvc;
 using TodoApi.Models;
 using Microsoft.EntityFrameworkCore;
 
-[ApiController]
-[Route("register")]
-public class RegisterController : ControllerBase
+namespace TodoApi.Controllers
 {
-    private readonly ToDoDbContext _context;
-
-    public RegisterController(ToDoDbContext context)
+    [ApiController]
+    [Route("register")]
+    public class RegisterController : ControllerBase
     {
-        _context = context;
-    }
+        private readonly ToDoDbContext _context;
 
-    [HttpPost]
-    public async Task<IActionResult> Register([FromBody] User user)
-    {
-        if (user == null || string.IsNullOrEmpty(user.Username) || string.IsNullOrEmpty(user.Password))
+        public RegisterController(ToDoDbContext context)
         {
-            return BadRequest("Username and Password are required.");
+            _context = context;
         }
 
-        // Optional: hash the password here before saving
+        [HttpPost]
+        public async Task<IActionResult> Register(User user)
+        {
+            if (string.IsNullOrEmpty(user.Username) || string.IsNullOrEmpty(user.Password))
+                return BadRequest("Username and password are required.");
 
-        _context.Users.Add(user);
-        await _context.SaveChangesAsync();
+            var existingUser = await _context.Users
+                .FirstOrDefaultAsync(u => u.Username == user.Username);
 
-        return Ok(new { message = "User registered successfully" });
+            if (existingUser != null)
+                return Conflict("User already exists.");
+
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            // אם תרצה, אפשר להוסיף JWT כאן בעתיד
+            return Ok(new { user.Id, user.Username });
+        }
     }
 }

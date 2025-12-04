@@ -55,8 +55,15 @@ var app = builder.Build();
 // Middleware
 // ======================================
 app.UseCors("AllowClient");
+
 app.UseHttpsRedirection();
 app.MapControllers();
+
+// ======================================
+// Configure Port for Cloud Deployment
+// ======================================
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+app.Urls.Add($"http://0.0.0.0:{port}");
 
 // ======================================
 // Run
