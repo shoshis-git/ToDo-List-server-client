@@ -1,230 +1,289 @@
-/* Auth Container */
-.auth-container {
+/* כלליים */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  padding: 20px;
+  height: 100vh;
 }
 
-.auth-box {
-  background: #fff;
+/* container */
+.login-container {
+  background-color: #fff;
+  padding: 30px;
   border-radius: 8px;
-  box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.2);
-  padding: 40px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 400px;
-  animation: slideUp 0.5s ease-out;
 }
 
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Title */
-.auth-title {
-  font-size: 28px;
-  font-weight: 600;
+/* כותרת */
+.login-title {
+  text-align: center;
+  margin-bottom: 20px;
   color: #333;
-  margin: 0 0 8px 0;
-  text-align: center;
 }
 
-.auth-subtitle {
-  font-size: 14px;
-  color: #999;
-  text-align: center;
-  margin: 0 0 30px 0;
-}
-
-/* Form */
-.auth-form {
+/* הטופס */
+.login-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
 }
 
-/* Form Group */
+/* קבוצת קלט */
 .form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.form-label {
-  font-size: 14px;
-  font-weight: 600;
-  color: #333;
-  display: block;
+  margin-bottom: 15px;
 }
 
 .form-input {
-  padding: 12px 16px;
-  font-size: 14px;
-  border: 1px solid #e0e0e0;
-  border-radius: 6px;
-  font-family: inherit;
-  transition: all 0.3s ease;
-  background: #fafafa;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
 }
 
 .form-input:focus {
+  border-color: #4e90f2;
   outline: none;
-  border-color: #667eea;
-  background: #fff;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
-.form-input:disabled {
-  background: #f5f5f5;
-  color: #999;
-  cursor: not-allowed;
-}
-
-.form-hint {
-  font-size: 12px;
-  color: #999;
-  display: block;
-}
-
-/* Messages */
+/* הודעת שגיאה */
 .error-message {
-  padding: 12px 16px;
-  background: #fee;
-  border: 1px solid #fcc;
-  border-radius: 6px;
-  color: #c33;
+  color: #ff4d4d;
   font-size: 14px;
-  text-align: center;
-  animation: shake 0.3s ease-in-out;
+  margin-bottom: 10px;
 }
 
-.success-message {
-  padding: 12px 16px;
-  background: #efe;
-  border: 1px solid #cfc;
-  border-radius: 6px;
-  color: #3c3;
-  font-size: 14px;
-  text-align: center;
-  animation: slideDown 0.3s ease-out;
-}
-
-@keyframes shake {
-  0%, 100% {
-    transform: translateX(0);
-  }
-  25% {
-    transform: translateX(-10px);
-  }
-  75% {
-    transform: translateX(10px);
-  }
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Buttons */
-.auth-button {
-  padding: 12px 24px;
-  font-size: 16px;
-  font-weight: 600;
-  color: #fff;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+/* כפתור */
+.submit-button {
+  background-color: #4e90f2;
+  color: white;
   border: none;
-  border-radius: 6px;
+  padding: 12px;
+  border-radius: 4px;
+  font-size: 16px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-top: 10px;
+  transition: background-color 0.3s;
 }
 
-.auth-button:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 20px 0 rgba(102, 126, 234, 0.4);
+.submit-button:hover {
+  background-color: #3578b2;
 }
 
-.auth-button:active:not(:disabled) {
-  transform: translateY(0);
+.submit-button:active {
+  background-color: #2a5986;
+}
+/* כלליים */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-.auth-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
-.auth-divider {
+/* container */
+.register-container {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+/* כותרת */
+.register-title {
   text-align: center;
-  margin: 25px 0 20px 0;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* הטופס */
+.register-form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* קבוצת קלט */
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.form-input:focus {
+  border-color: #4e90f2;
+  outline: none;
+}
+
+/* הודעת שגיאה */
+.error-message {
+  color: #ff4d4d;
   font-size: 14px;
+  margin-bottom: 10px;
+}
+
+/* כפתור */
+.submit-button {
+  background-color: #4e90f2;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+  background-color: #3578b2;
+}
+
+.submit-button:active {
+  background-color: #2a5986;
+}
+/* כלליים */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f9f9f9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* אפליקציית ה- Todo */
+.todo-app {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+/* כותרת */
+.todo-title {
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+/* טופס */
+.todo-form {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.task-input {
+  width: 75%;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  outline: none;
+}
+
+.task-input:focus {
+  border-color: #4e90f2;
+}
+
+.add-button {
+  padding: 10px 15px;
+  border: none;
+  background-color: #4e90f2;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.add-button:hover {
+  background-color: #3578b2;
+}
+
+.add-button:active {
+  background-color: #2a5986;
+}
+
+/* רשימת משימות */
+.task-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.task-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f9f9f9;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.task-checkbox {
+  margin-right: 12px;
+}
+
+.task-name {
+  flex-grow: 1;
+  font-size: 18px;
+  color: #333;
+  word-wrap: break-word;
+}
+
+.task-name.completed {
+  text-decoration: line-through;
   color: #999;
 }
 
-.auth-link-button {
-  padding: 12px 24px;
-  font-size: 16px;
-  font-weight: 600;
-  color: #667eea;
-  background: #f5f5f5;
-  border: 2px solid #667eea;
-  border-radius: 6px;
+.delete-button {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  width: 100%;
+  transition: background-color 0.3s;
 }
 
-.auth-link-button:hover:not(:disabled) {
-  background: #667eea;
-  color: #fff;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 20px 0 rgba(102, 126, 234, 0.4);
+.delete-button:hover {
+  background-color: #c0392b;
 }
 
-.auth-link-button:active:not(:disabled) {
-  transform: translateY(0);
-}
-
-.auth-link-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-/* Responsive */
-@media (max-width: 480px) {
-  .auth-box {
-    padding: 30px 20px;
-  }
-
-  .auth-title {
-    font-size: 24px;
-  }
-
-  .auth-subtitle {
-    font-size: 13px;
-  }
-
-  .form-input {
-    font-size: 16px; /* Prevents zoom on iOS */
-  }
+.delete-button:active {
+  background-color: #992d22;
 }

@@ -57,26 +57,28 @@ export default function Tasks() {
 
   return (
     <div className="todo-app">
-      <h1>Todo List</h1>
-      <form onSubmit={handleAddTask}>
+      <h1 className="todo-title">Todo List</h1>
+      <form onSubmit={handleAddTask}  className="todo-form">
         <input 
           type="text" 
           value={newTask} 
           onChange={(e) => setNewTask(e.target.value)} 
+          className="task-input"
           placeholder="Add a new task"
         />
-        <button type="submit">Add Task</button>
+        <button type="submit" className="add-button">Add Task</button>
       </form>
-      <ul>
+      <ul className="task-list">
         {tasks.map(task => (
-          <li key={task.id}>
+          <li key={task.id} className="task-item">
             <input 
               type="checkbox" 
               checked={task.isComplete} 
               onChange={() => handleToggleTask(task)}
+              className="task-checkbox"
             />
-            <span>{task.name}</span>
-            <button onClick={() => handleDeleteTask(task.id)}>Delete</button>
+            <span className={`task-name ${task.isComplete ? 'completed' : ''}`}>{task.name}</span>
+            <button onClick={() => handleDeleteTask(task.id)} className="delete-button">Delete</button>
           </li>
         ))}
       </ul>
