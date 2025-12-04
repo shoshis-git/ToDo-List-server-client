@@ -66,7 +66,7 @@ export default function Tasks() {
         <button type="submit">Add Task</button>
       </form>
       <ul>
-        {Array.tasks.map(task => (
+        {Array.isArray(tasks) && tasks.map(task => (
           <li key={task.id}>
             <input 
               type="checkbox" 
