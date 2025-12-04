@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const apiClient = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || "http://localhost:5126",
+  baseURL: process.env.REACT_APP_API_URL,
 });
 
 // ---- REQUEST ----
@@ -22,7 +22,9 @@ apiClient.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-const API_URL = "https://todo-list-server-client.onrender.com/items";
+
+const API_URL = `${process.env.REACT_APP_API_URL}/tasks`;
+
 // ---- API FUNCTIONS ----
 export default {
   register: (username, password) =>
@@ -43,36 +45,20 @@ export default {
 
   addTask: async (taskName) => {
     // שולח אובייקט עם השדות לפי המסד
-    const res = await axios.post(API_URL, { Username: taskName, IsComplete: false });
+    const res = await axios.post(API_URL, { Name: taskName, IsComplete: false });
     return res.data;
   },
 
-  setCompleted : async (id, isComplete, username) => {
+  setCompleted: async (id, isComplete, name) => {
     const res = await axios.put(`${API_URL}/${id}`, {
-      Username: username,
+      Name: name,
       IsComplete: isComplete,
     });
     return res.data;
   },
 
-  deleteTask : async (id) => {
+  deleteTask: async (id) => {
     const res = await axios.delete(`${API_URL}/${id}`);
     return res.data;
   },
-
-// export default {
-//   getTasks,
-//   addTask,
-//   setCompleted,
-//   deleteTask,
-// };
-
-  
 };
-
-
-
-
-
-
-

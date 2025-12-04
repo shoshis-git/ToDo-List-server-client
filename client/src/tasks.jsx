@@ -21,14 +21,14 @@ export default function Tasks() {
     e.preventDefault();
     if (!newTask.trim()) return;
 
-    // שולח את השדה Username במקום name
-    await api.addTask({ Username: newTask, IsComplete: false });
+    // שולח את השדה Name במקום Username
+    await api.addTask({ Name: newTask, IsComplete: false });
     setNewTask("");
     fetchTasks();
   };
 
   const handleToggle = async (task) => {
-    await api.setCompleted(task.id, !task.IsComplete, task.Username);
+    await api.setCompleted(task.id, !task.IsComplete, task.Name);
     fetchTasks();
   };
 
@@ -41,7 +41,7 @@ export default function Tasks() {
     const allCompleted = tasks.every(t => t.IsComplete);
     for (const task of tasks) {
       if (task.IsComplete === allCompleted) {
-        await api.setCompleted(task.id, !allCompleted, task.Username);
+        await api.setCompleted(task.id, !allCompleted, task.Name);
       }
     }
     fetchTasks();
@@ -57,7 +57,7 @@ export default function Tasks() {
 
   const handleEditStart = (task) => {
     setEditingId(task.id);
-    setEditText(task.Username);
+    setEditText(task.Name);
   };
 
   const handleEditSave = async (task) => {
@@ -130,7 +130,7 @@ export default function Tasks() {
                     onChange={() => handleToggle(task)}
                   />
                   <label onDoubleClick={() => handleEditStart(task)}>
-                    {task.Username}
+                    {task.Name} {/* כאן השתמשנו ב-Name במקום Username */}
                   </label>
                   <button className="destroy" onClick={() => handleDelete(task)}></button>
                 </div>
