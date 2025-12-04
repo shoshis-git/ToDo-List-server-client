@@ -1,11 +1,10 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using TodoApi.Data;
+using TodoApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // ======================================
-// Load environment variables (Render)
+// Load environment variables
 // ======================================
 builder.Configuration.AddEnvironmentVariables();
 
@@ -20,7 +19,8 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowClient", policy =>
     {
         policy.WithOrigins(
-            "https://to-do-list-client-6e7i.onrender.com"
+            "https://to-do-list-client-6e7i.onrender.com",
+            "http://localhost:3000"
         )
         .AllowAnyHeader()
         .AllowAnyMethod();
@@ -30,13 +30,15 @@ builder.Services.AddCors(options =>
 // ======================================
 // Database Connection
 // ======================================
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-                      ?? builder.Configuration["DefaultConnection"]
+// Clever Cloud sets environment variable for DB connection string
+var connectionString = Environment.GetEnvironmentVariable("tododb")
                       ?? throw new Exception("Connection string not found!");
 
-builder.Services.AddDbContext<AppDbContext>(options =>
+// MySQL with Pomelo
+builder.Services.AddDbContext<ToDoDbContext>(options =>
 {
-    options.UseNpgsql(connectionString);
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+    
 });
 
 // ======================================
@@ -48,7 +50,6 @@ var app = builder.Build();
 // Middleware
 // ======================================
 app.UseCors("AllowClient");
-
 app.UseHttpsRedirection();
 
 app.MapControllers();
