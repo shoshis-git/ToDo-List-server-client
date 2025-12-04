@@ -14,15 +14,15 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowClient", policy =>
     {
-        policy.WithOrigins("https://to-do-list-client-6e7i.onrender.com", "http://localhost:3000")
+        policy.WithOrigins("https://to-do-list-client-6e7i.onrender.com")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
 });
 
 // Database Connection
-string? connectionString = Environment.GetEnvironmentVariable("tododb")
-                              ?? builder.Configuration.GetConnectionString("ToDoDb");
+string? connectionString = Environment.GetEnvironmentVariable("tododb") ??
+                               builder.Configuration.GetConnectionString("ToDoDb");
 
 if (string.IsNullOrEmpty(connectionString))
 {
@@ -42,11 +42,14 @@ var app = builder.Build();
 // Use CORS **before** mapping controllers
 app.UseCors("AllowClient");
 
+// Removing HTTPS Redirection for Localhost (optional)
 app.UseHttpsRedirection();
+
+// Map controllers (this handles your routes)
 app.MapControllers();
 
-// Configure Port for Cloud Deployment
-var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+// Configure Port for Cloud Deployment or Localhost
+var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";  // Choose the port for local development
 app.Urls.Add($"http://0.0.0.0:{port}");
 
 app.Run();
