@@ -11,7 +11,7 @@ export default function Tasks() {
       const response = await api.getTasks();
       setTasks(response.data||[]);
     } catch (error) {
-      console.error("Error fetching tasks:", error);
+      console.log("Error fetching tasks:", error);
     }
   };
 
@@ -22,10 +22,10 @@ export default function Tasks() {
 
     try {
       await api.addTask(newTask);
+      fetchTasks(); 
       setNewTask("");
-      fetchTasks();
     } catch (error) {
-      console.error("Error adding task:", error);
+      console.log("Error adding task:", error);
     }
   };
 
@@ -35,7 +35,7 @@ export default function Tasks() {
       await api.deleteTask(id);
       fetchTasks();
     } catch (error) {
-      console.error("Error deleting task:", error);
+      console.log("Error deleting task:", error);
     }
   };
 
@@ -45,11 +45,12 @@ export default function Tasks() {
       await api.updateTask(task.id, task.name, !task.isComplete);
       fetchTasks();
     } catch (error) {
-      console.error("Error updating task:", error);
+      console.log("Error updating task:", error);
     }
   };
 
   useEffect(() => {
+
     fetchTasks();
   }, []);
 
@@ -66,7 +67,7 @@ export default function Tasks() {
         <button type="submit">Add Task</button>
       </form>
       <ul>
-        {Array.isArray(tasks) && tasks.map(task => (
+        {tasks.map(task => (
           <li key={task.id}>
             <input 
               type="checkbox" 
